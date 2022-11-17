@@ -1,4 +1,4 @@
-import { isValidObjectId, model, Model, models, Schema } from 'mongoose';
+import { isValidObjectId, model, Model, models, Schema, UpdateQuery } from 'mongoose';
 import ICar from '../Interfaces/ICar';
 import HttpException from '../Utils/HttpError';
 
@@ -30,6 +30,15 @@ class CarODM {
   public async findById(id: string): Promise<ICar | null> {
     if (!isValidObjectId(id)) throw new HttpException(422, 'Invalid mongo id');
     return this.model.findOne({ _id: id });
+  }
+
+  public async update(_id: string, obj: ICar): Promise<ICar | null> {
+    if (!isValidObjectId(_id)) throw new HttpException(422, 'Invalid mongo id');
+    return this.model.findByIdAndUpdate(
+      { _id },
+      { ...obj } as UpdateQuery<ICar>,
+      { new: true },
+    );
   }
 }
 

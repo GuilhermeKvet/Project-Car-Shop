@@ -34,6 +34,13 @@ class CarService {
     if (!car) throw new HttpException(404, 'Car not found');
     return this.createCarDomain(car);
   }
+
+  public async update(id: string, obj: ICar) {
+    const carODM = new CarODM();
+    const carUpdated = await carODM.update(id, obj);
+    if (!carUpdated) throw new HttpException(404, 'Car not found');
+    return this.createCarDomain(carUpdated);
+  }
 }
 
 export default CarService;
