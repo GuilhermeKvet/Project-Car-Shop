@@ -1,5 +1,6 @@
-import { model, Model, models, Schema } from 'mongoose';
+import { isValidObjectId, model, Model, models, Schema } from 'mongoose';
 import ICar from '../Interfaces/ICar';
+import HttpException from '../Utils/HttpError';
 
 class CarODM {
   private schema: Schema;
@@ -20,6 +21,15 @@ class CarODM {
 
   public async create(car: ICar): Promise<ICar> {
     return this.model.create({ ...car });
+  }
+
+  public async findAll(): Promise<ICar[]> {
+    return this.model.find();
+  }
+
+  public async findById(id: string): Promise<ICar | null> {
+    if (!isValidObjectId(id)) throw new HttpException(422, 'Invalid mongo id');
+    return this.model.findOne({ id });
   }
 }
 

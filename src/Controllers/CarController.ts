@@ -32,7 +32,27 @@ class CarController {
       const newCar = await this.service.create(car);
       return this.res.status(201).json(newCar);
     } catch (error) {
-      throw new HttpException(404, 'Not Found');
+      this.next(error);
+    }
+  }
+
+  public async findAllCars() {
+    try {
+      const cars = await this.service.findAllCars();
+      return this.res.status(200).json(cars);
+    } catch (error) {
+      this.next(error);
+    }
+  }
+
+  public async findCarById() {
+    const { id } = this.req.params;
+    try {
+      const car = await this.service.findCarById(id);
+      if (!car) throw new HttpException(404, 'Car not found');
+      return this.res.status(200).json(car);
+    } catch (error) {
+      this.next(error);
     }
   }
 }
