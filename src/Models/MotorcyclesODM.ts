@@ -1,30 +1,30 @@
 import { isValidObjectId, Schema } from 'mongoose';
-import ICar from '../Interfaces/ICar';
+import IMotorcycle from '../Interfaces/IMotorcycle';
 import HttpException from '../Utils/HttpError';
 import AbstractODM from './AbstractODM';
 
-class CarODM extends AbstractODM<ICar> {
+class MotorcycleODM extends AbstractODM<IMotorcycle> {
   constructor() {
-    const schema = new Schema<ICar>({
+    const schema = new Schema<IMotorcycle>({
       model: { type: String, required: true },
       year: { type: Number, required: true },
       color: { type: String, required: true },
       status: { type: Boolean, required: false },
       buyValue: { type: Number, required: true },
-      doorsQty: { type: Number, required: true },
-      seatsQty: { type: Number, required: true },
+      category: { type: String, required: true },
+      engineCapacity: { type: Number, required: true },
     });
-    super(schema, 'Cars');
+    super(schema, 'Motorcycle');
   }
 
-  public async findAll(): Promise<ICar[]> {
+  public async findAll(): Promise<IMotorcycle[]> {
     return this.model.find();
   }
 
-  public async findById(_id: string): Promise<ICar | null> {
+  public async findById(_id: string): Promise<IMotorcycle | null> {
     if (!isValidObjectId(_id)) throw new HttpException(422, 'Invalid mongo id');
     return this.model.findOne({ _id });
   }
 }
 
-export default CarODM;
+export default MotorcycleODM;
