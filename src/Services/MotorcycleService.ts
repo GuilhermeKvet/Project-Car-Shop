@@ -6,21 +6,14 @@ import HttpException from '../Utils/HttpError';
 const notFound = 'Motorcycle not found';
 
 class MotorcycleService {
-  private createMotorcycleDomain(motorcycle: IMotorcycle | null): Motorcycle | null {
-    if (motorcycle) {
-      return new Motorcycle(motorcycle);
-    }
-    return null;
+  private createMotorcycleDomain(motorcycle: IMotorcycle): Motorcycle {
+    return new Motorcycle(motorcycle);
   }
 
   public async create(motorcycle: IMotorcycle) {
     const motorcycleODM = new MotorcycleODM();
-    try {
-      const newMotorcycle = await motorcycleODM.create(motorcycle);
-      return this.createMotorcycleDomain(newMotorcycle);
-    } catch (error) {
-      throw new HttpException(404, 'Not Found');
-    }
+    const newMotorcycle = await motorcycleODM.create(motorcycle);
+    return this.createMotorcycleDomain(newMotorcycle);
   }
 
   public async findAllMotorcycles() {
@@ -50,6 +43,7 @@ class MotorcycleService {
     const motorcycleODM = new MotorcycleODM();
     const motorcycleDeleted = await motorcycleODM.delete(id);
     if (!motorcycleDeleted) throw new HttpException(404, notFound);
+    return motorcycleDeleted;
   }
 }
 
